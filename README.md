@@ -69,6 +69,20 @@ head(sort(table(wc$sportsbook), decreasing = TRUE))     # source coverage
 
 Ideas: cross-book vig comparison, best-line analysis, implied-probability calibration against results, market-efficiency studies across 23 sources, arbitrage detection exercises.
 
+## Validation
+
+Run the dependency-free checks with Python 3.12:
+
+```sh
+python -m unittest discover -s tests -v
+python scripts/validate_data.py
+```
+
+CI checks every `data/*.csv` for the shared header, row widths, required values,
+finite odds and line values, valid odds ranges, ISO 8601 timestamps, and
+`True`/`False` booleans. `home_team`, `away_team`, and `line` may be empty;
+all other columns are required. IDs and row counts are not constrained.
+
 ## Want live or historical data?
 
 This is a static snapshot. The live feed behind it: [SharpAPI](https://sharpapi.io) serves real-time odds from 45+ sportsbooks with sub-89ms SSE streaming, no-vig fair odds, +EV and arbitrage detection, plus historical odds and closing-line data on paid tiers. The free tier needs no credit card: [sharpapi.io/pricing](https://sharpapi.io/pricing). SDKs: [Python](https://pypi.org/project/sharpapi/) and [TypeScript](https://www.npmjs.com/package/@sharp-api/client).
