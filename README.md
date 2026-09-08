@@ -1,5 +1,6 @@
 # Sports Betting Odds Sample Dataset (SharpAPI)
 
+[![Validate sample data](https://github.com/Sharp-API/SharpAPI-Sample-Data/actions/workflows/validate.yml/badge.svg)](https://github.com/Sharp-API/SharpAPI-Sample-Data/actions/workflows/validate.yml)
 [![license](https://img.shields.io/badge/license-CC%20BY%204.0-06b6d4)](https://creativecommons.org/licenses/by/4.0/)
 [![rows](https://img.shields.io/badge/rows-9%2C805-06b6d4)](#files)
 [![sources](https://img.shields.io/badge/sources-23-06b6d4)](#files)
