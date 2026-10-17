@@ -1,8 +1,9 @@
 name: Public text
 
 # Fails a pull request, or a push to main, that would put internal detail into
-# this public repository: the PR's title, body, branch name and commit
-# messages, the names of the files it touches and every line it adds.
+# this public repository: the PR's title, body, branch name, commit messages and
+# commit author/committer identities, the names of the files it touches and
+# every line it adds.
 #
 # The patterns are not in this repository. They arrive base64-encoded in the
 # PUBTEXT_GUARD organization secret, so publishing this file publishes none of
@@ -121,10 +122,10 @@ jobs:
 
           hits, surfaces, incomplete = [], 0, []
 
-          def check(where, text, path=None, line_numbers=None):
+          def check(where, text, path=None, line_numbers=None, skip=frozenset()):
               global surfaces
               surfaces += 1
-              exempt = set()
+              exempt = set(skip)
               if line_numbers:
                   for rx, categories in EXEMPT:
                       if rx.search(path):
@@ -151,6 +152,19 @@ jobs:
                       number += 1
                   else:
                       number += 1
+
+          # Every commit's author and committer are public too. Each must use a GitHub
+          # noreply address or the company domain, and must not match the guard; a
+          # person's own name is expected here, so that category is not counted.
+          ALLOWED_EMAIL = re.compile(r"(@users\.noreply\.github\.com|^noreply@github\.com|@sharpapi\.io)$", re.I)
+
+          def check_identity(c):
+              for role in ("author", "committer"):
+                  who = c["commit"].get(role) or {}
+                  where = f"commit {c['sha'][:12]} {role}"
+                  check(where, f"{who.get('name') or ''} <{who.get('email') or ''}>", skip={"people"})
+                  if not ALLOWED_EMAIL.search(who.get("email") or ""):
+                      hits.append((where, "identity-email", None, 1))
 
           def check_files(files):
               for f in files:
@@ -186,6 +200,7 @@ jobs:
                   incomplete.append(f"{len(files)} of {pr['changed_files']} files")
               for c in commits:
                   check(f"commit {c['sha'][:12]} message", c["commit"]["message"])
+                  check_identity(c)
               check_files(files)
           else:
               before = ENV.get("BEFORE") or ""
@@ -202,6 +217,7 @@ jobs:
                       incomplete.append("300 or more files")
               for c in commits:
                   check(f"commit {c['sha'][:12]} message", c["commit"]["message"])
+                  check_identity(c)
               check_files(files)
 
           def prop(value):
@@ -222,6 +238,10 @@ jobs:
               print(f"public-text: {len(hits)} hit(s) in {surfaces} surfaces. The matched text is "
                     "deliberately not shown. Rewrite for a customer: name no internal system, host, "
                     "path, person, private repository or ticket number.")
+              if any(category == "identity-email" for _, category, _, _ in hits):
+                  print("public-text: identity-email means a commit author or committer uses a personal "
+                        "address. Commit again with a GitHub noreply address (Settings > Emails) or a "
+                        "company address.")
               set_status(head, False, f"{len(hits)} internal-detail hit(s); see the run")
               sys.exit(1)
           print(f"public-text: clean, {surfaces} surfaces scanned")
