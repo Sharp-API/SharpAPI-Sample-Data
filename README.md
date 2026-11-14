@@ -6,14 +6,14 @@
 [![sources](https://img.shields.io/badge/sources-23-06b6d4)](#files)
 [![source](https://img.shields.io/badge/source-sharpapi.io-06b6d4)](https://sharpapi.io)
 
-Real odds snapshots from [SharpAPI](https://sharpapi.io), the real-time sports betting odds API: 23 sources spanning sportsbooks, exchanges, and prediction markets. Free to use for research, coursework, backtesting experiments, and data journalism, with attribution (CC BY 4.0, see below).
+Real odds snapshots from [SharpAPI](https://sharpapi.io), the real-time sports betting odds API. The files span sportsbooks, exchanges, and prediction markets. Free to use for research, coursework, backtesting experiments, and data journalism, with attribution (CC BY 4.0, see below).
 
 ## Files
 
 | File | Rows | What it is |
 |---|---|---|
-| `data/worldcup_2026_odds_snapshot.csv` | 6,132 | Full odds board for the 2026 FIFA World Cup, captured 2026-07-13 (semifinals week: Argentina vs England, France vs Spain). 20 sources, 99 market types, from moneylines and Asian handicaps to correct score and outrights. |
-| `data/mlb_odds_snapshot.csv` | 3,673 | MLB during All-Star week, captured the same night across 14 of those sources. Mostly a futures board (World Series, pennant, playoff and division odds; MVP/Cy Young/Rookie of the Year; All-Star selection contracts) plus a small set of regular-season game, inning, and player-prop markets. |
+| `data/worldcup_2026_odds_snapshot.csv` | 6,132 | Full odds board for the 2026 FIFA World Cup, captured 2026-07-13 (semifinals week: Argentina vs England, France vs Spain). 99 market types, from moneylines and Asian handicaps to correct score and outrights. |
+| `data/mlb_odds_snapshot.csv` | 3,673 | MLB during All-Star week, captured the same night from a subset of the same sources. Mostly a futures board (World Series, pennant, playoff and division odds; MVP/Cy Young/Rookie of the Year; All-Star selection contracts) plus a small set of regular-season game, inning, and player-prop markets. |
 
 Both files share one schema: each row is one price on one selection at one source at capture time.
 
@@ -68,7 +68,7 @@ head(sort(table(wc$market_type), decreasing = TRUE))   # market coverage
 head(sort(table(wc$sportsbook), decreasing = TRUE))     # source coverage
 ```
 
-Ideas: cross-book vig comparison, best-line analysis, implied-probability calibration against results, market-efficiency studies across 23 sources, arbitrage detection exercises.
+Ideas: cross-book vig comparison, best-line analysis, implied-probability calibration against results, market-efficiency studies across sources, arbitrage detection exercises.
 
 ## Validation
 
@@ -86,7 +86,7 @@ all other columns are required. IDs and row counts are not constrained.
 
 ## Want live or historical data?
 
-This is a static snapshot. The live feed behind it: [SharpAPI](https://sharpapi.io) serves real-time odds from 45+ sportsbooks with sub-89ms SSE streaming, no-vig fair odds, +EV and arbitrage detection, plus historical odds and closing-line data on paid tiers. The free tier needs no credit card: [sharpapi.io/pricing](https://sharpapi.io/pricing). SDKs: [Python](https://pypi.org/project/sharpapi/) and [TypeScript](https://www.npmjs.com/package/@sharp-api/client).
+This is a static snapshot. The live feed behind it: [SharpAPI](https://sharpapi.io) serves real-time odds with sub-89ms SSE streaming, no-vig fair odds, +EV and arbitrage detection, plus historical odds and closing-line data on paid tiers. The free tier needs no credit card: [sharpapi.io/pricing](https://sharpapi.io/pricing). SDKs: [Python](https://pypi.org/project/sharpapi/) and [TypeScript](https://www.npmjs.com/package/@sharp-api/client).
 
 ## License and attribution
 
@@ -102,7 +102,7 @@ BibTeX:
   author = {{SharpAPI}},
   year   = {2026},
   url    = {https://sharpapi.io},
-  note   = {2026 FIFA World Cup and MLB odds snapshots, 23 sources}
+  note   = {2026 FIFA World Cup and MLB odds snapshots}
 }
 ```
 
